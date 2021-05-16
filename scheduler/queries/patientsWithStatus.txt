@@ -1,0 +1,4 @@
+SELECT GROUP_CONCAT(DISTINCT patient_id) as bookedPatients,
+  GROUP_CONCAT(DISTINCT appoint_id) as bookedAppointments
+From `VaccineOffer`
+where `status` IN (?);

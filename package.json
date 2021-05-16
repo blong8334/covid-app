@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node scheduler/index.js"
+    "run-scheduler": "node scheduler/index.js",
+    "set-scheduler": "node scheduler/interval"
   },
   "repository": {
     "type": "git",

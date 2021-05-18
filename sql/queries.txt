@@ -1,0 +1,49 @@
+CREATE FUNCTION st_distance_sphere(pt1 POINT, pt2 POINT)
+RETURNS double(10,2)
+
+RETURN 6371000 * 2 * ASIN(
+    SQRT(
+        POWER(SIN((ST_Y(pt2) - ST_Y(pt1)) * pi()/180 / 2), 2) +
+        COS(ST_Y(pt1) * pi()/180 ) *
+        COS(ST_Y(pt2) * pi()/180) *
+        POWER(SIN((ST_X(pt2) - ST_X(pt1)) * pi()/180 / 2), 2)
+    )
+);
+
+DROP EVENT IF EXISTS check_offer;
+CREATE EVENT check_offer
+  ON SCHEDULE
+    EVERY 1 MINUTE
+    STARTS (TIMESTAMP(CURRENT_DATE))
+	DO
+	UPDATE VaccineOffer
+	SET status = "expired"
+	WHERE status = "pending" and deadline_date < NOW();
+
+DELIMITER $$
+create trigger group_assign
+after insert on patientupload
+for each row
+begin
+DECLARE age INT;
+SELECT TIMESTAMPDIFF(YEAR, patient_dob, CURDATE()) INTO age
+from patient
+WHERE patient_id = NEW.patient_id;
+    if (age > 60) then
+        UPDATE patient set group_no = 1
+        WHERE patient_id = NEW.patient_id;
+    elseif (age <= 60) AND (age > 50)  then
+        UPDATE patient set group_no = 2
+        WHERE patient_id = NEW.patient_id;
+    elseif (age <= 50) AND (age > 35)  then
+        UPDATE patient set group_no = 3
+        WHERE patient_id = NEW.patient_id;
+    elseif (age <= 35) AND (age > 20)  then
+        UPDATE patient set group_no = 4
+        WHERE patient_id = NEW.patient_id;
+    elseif (age <= 20)  then
+        UPDATE patient set group_no = 5
+        WHERE patient_id = NEW.patient_id;
+end if;
+end$$
+DELIMITER ;

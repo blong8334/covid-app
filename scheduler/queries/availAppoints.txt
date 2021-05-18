@@ -1,3 +1,0 @@
-SELECT appoint_id, provider_id, appoint_date, appoint_time, provider_location
-FROM `VaccineAppointment` NATURAL JOIN `Provider`
-WHERE `appoint_id` NOT IN (?) AND `appoint_date` > NOW();

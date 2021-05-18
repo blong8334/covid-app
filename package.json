@@ -1,0 +1,23 @@
+{
+  "name": "covid-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "set-scheduler": "node scheduler/interval.js",
+    "run-scheduler": "node scheduler/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blong8334/covid-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blong8334/covid-app/issues"
+  },
+  "homepage": "https://github.com/blong8334/covid-app#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}

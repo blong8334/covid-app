@@ -1,0 +1,10 @@
+SELECT p.patient_id, p.group_no, p.patient_dob, p.patient_location, p.max_travel,
+  GROUP_CONCAT(CONCAT_WS(';', week_day, starttime, endtime)) AS avail
+FROM `PATIENT` AS p
+NATURAL JOIN `Group`
+LEFT JOIN `PatientAvailability` AS pa
+ON p.patient_id = pa.patient_id
+NATURAL JOIN `TimeSlot`
+WHERE p.patient_id NOT IN (?) AND eligible_date <= NOW()
+GROUP BY p.patient_id
+ORDER BY `group_no` ASC, patient_dob ASC;

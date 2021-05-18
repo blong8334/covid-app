@@ -1,12 +1,12 @@
 <?php 
 include('config.php');
-include('include/header.php');
 $error = '';
 $success = '';
 if (!isset($_SESSION))
-  {
+{
     session_start();
-  }
+}
+include('include/header.php');
      
 if (isset($_SESSION["username"])) {
     $username = $_SESSION["username"];

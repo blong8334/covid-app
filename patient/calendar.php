@@ -1,13 +1,13 @@
 <?php 
 include('../config.php');
-include('../include/header.php');
 include('../constants.php');
 
 error_reporting(E_ERROR | E_PARSE);
 if (!isset($_SESSION))
-  {
-    session_start();
-  }
+{
+  session_start();
+}
+include('../include/header.php');
   
 if( isset( $_SESSION['counter'] ) ) {
   $_SESSION['counter'] += 1;

@@ -127,13 +127,12 @@ $vaccinepending=$query3->rowCount();
 		}
 	else{							
 								
-	$query4 = $connection->prepare("select st_distance_sphere(p.patient_location, t2.provider_location)/1000 as location, p.patient_name
+	$query4 = $connection->prepare("select distinct st_distance_sphere(p.patient_location, t2.provider_location)/1000 as location
         FROM patient p NATURAL join (
-        SELECT distinct patient_id, appoint_id, appoint_date, appoint_time, provider_location
+        SELECT patient_id, provider_name, appoint_id, appoint_date, appoint_time, provider_location
 		from vaccineappointment natural join provider natural join vaccineoffer
-		where appoint_id in (select appoint_id from vaccineoffer
-		where (status = 'pending' or status = 'accepted') AND patient_id =:id)) t2
-        where p.patient_id = t2.patient_id 
+        where status = 'pending' or status = 'accepted') t2
+        where p.patient_id = t2.patient_id AND patient_id =:id
         order by st_distance_sphere(p.patient_location, t2.provider_location) LIMIT 1");
 	$query4->bindParam("id", $id, PDO::PARAM_INT);
 	$query4->execute();

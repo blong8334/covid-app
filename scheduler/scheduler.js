@@ -11,10 +11,7 @@ async function scheduler() {
       queries['patientsWithStatus.txt'],
       [['completed', 'pending']],
     );
-    let {
-      bookedPatients,
-      bookedAppointments,
-    } = unavailOffers[0];
+    let { bookedPatients, bookedAppointments } = unavailOffers[0];
     if (!bookedPatients) {
       bookedPatients = '';
     }
@@ -29,7 +26,6 @@ async function scheduler() {
       console.log('No patients to book');
       break booking;
     }
-
     const availAppoints = await connection.query(
       queries['availAppoints.txt'],
       [bookedAppointments.split(',')],
@@ -38,6 +34,7 @@ async function scheduler() {
       console.log('No appointments available');
       break booking;
     }
+
     const patientOfferMap = getOfferMap(availPatients, availAppoints);
     const best = findBestApptCombo(patientOfferMap);
     let offer_date = Date.now();
@@ -57,7 +54,7 @@ async function scheduler() {
       await connection.query(queries['vaccineOffers.txt'] + ' ' + offers.join(','));
       console.log(`Succesfully offered ${offers.length} appointments`);
     } else {
-      console.log('no offers matched');
+      console.log('No offers matched');
     }
   } catch (err) {
     console.error(err);

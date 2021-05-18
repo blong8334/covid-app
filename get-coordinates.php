@@ -1,7 +1,7 @@
 <?php
 function getCoordinates($address)
 {
-  include('./secrets.php');
+  include('secrets.php');
   $ch = curl_init();
   $encodedAddress = urlencode($address);
   $url = $geoUrl . "?key=$apiKey&address=$encodedAddress";
@@ -9,9 +9,13 @@ function getCoordinates($address)
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $response = curl_exec($ch);
+  $resp = json_decode($response, true);
   $decRes;
-  if ($response) {
-    $decRes = json_decode($response, true)['results'][0]['geometry']['location'];
+  if ($resp['status']=='OK') { 
+    $decRes = $resp['results'][0]['geometry']['location'];
+   }
+  else {
+	  $decRes = [];
   }
   curl_close($ch);
   // decRes is an obj with props lat and lng;

@@ -1,3 +1,0 @@
-INSERT INTO `VaccineOffer`
-(`patient_id`, `appoint_id`, `status`, `offer_date`, `deadline_date`)
-Values

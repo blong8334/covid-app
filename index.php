@@ -3,24 +3,37 @@
     include('config.php');
 	$error = '';
 	$success = '';
-    if (isset($_POST['submit'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $query = $connection->prepare("SELECT * FROM user WHERE user_name=:username");
-        $query->bindParam("username", $username, PDO::PARAM_STR);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        if (!$result) {
-                $error = "Wrong Username and Password Combination";
-        } else {
-            if (password_verify($password, $result['passwordhash'])) {
-                $_SESSION['user_name'] = $result['user_name'];
-                $success = "Login was successful!";
-            } else {
-                $error = "Wrong Username and Password Combination";
-            }
-        }
-    }
+	if (!isset($_SESSION["username"])){
+		if (isset($_POST['submit'])) {
+		$username = $_POST['username'];
+		$password = $_POST['password'];
+		$query = $connection->prepare("SELECT * FROM user WHERE user_name=:username");
+		$query->bindParam("username", $username, PDO::PARAM_STR);
+		$query->execute();
+		$result = $query->fetch(PDO::FETCH_ASSOC);
+		if (!$result) {
+				$error = "Wrong Username and Password Combination";
+		} else {
+			if (password_verify($password, $result['passwordhash'])) {
+				$_SESSION['username'] = $result['user_name'];
+				$_SESSION['usertype'] = $result['user_type'];
+				$success = "Login was successful!";				
+             if ($result['user_type'] == 'patient') {				
+				header("location: ./patient/patient.php"); 
+			    exit; }
+			elseif ($result['user_type'] == 'provider') {
+				header("location: ./provider/provider.php"); 
+			    exit; }				
+
+			} else {
+				$error = "Wrong Username and Password Combination";
+			}
+	}}} 
+	else {
+			header("location: index.php"); 
+			exit;
+	}
+	
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +64,7 @@
 <input type="password" name="password" class="form-control" required> 
 </div> 
 <div class="form-group"> 
-<input type="submit" name="submit" class="btn btn-primary" value="submit"> 
+<input type="submit" name="submit" class="btn btn-primary" value="Submit"> 
 </div> 
 <p>Don't have an account? <a href="register.php">Register here</a>.</p> 
 </form> 

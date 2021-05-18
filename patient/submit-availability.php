@@ -1,7 +1,9 @@
 <?php
-include("config.php");
-include("constants.php");
-
+include("../config.php");
+include("../constants.php");
+error_reporting(E_ERROR | E_PARSE);
+session_start();
+$_SESSION['counter'] = 0;
 $availability = array();
 $patientId = $_POST["patientId"];
 for ($row = 0; $row < $_POST["timeSlotCount"]; $row++) {
@@ -32,24 +34,14 @@ if (strlen($trimmed)) {
   $query = $connection->prepare("INSERT INTO PatientAvailability(patient_id, week_day, time_id) VALUES $trimmed;");
   $results = $query->execute();
 }
-if ($results) {
-  echo "<h2 class='header'>Update successful</h2>";
-} else {
-  echo "<h2 class='header'>Update failed</h2>";
+if ($results) {			
+        $_SESSION['status'] = "Successfully Updated";
+        header('Location: calendar.php'); 
+    }
+    else
+    {
+        $_SESSION['status'] = "Failed";
+        header('Location: calendar.php'); 
 }
+
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Submit Availability</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-</head>
-
-<body>
-
-</body>
-
-</html>

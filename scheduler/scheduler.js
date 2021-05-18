@@ -51,7 +51,11 @@ async function scheduler() {
       return `(${results})`;
     });
     if (offers.length) {
-      await connection.query(queries['vaccineOffers.txt'] + ' ' + offers.join(','));
+      await connection.query(
+        queries['vaccineOffers.txt'] + ' ' + offers.join(',') +
+        '\nON DUPLICATE KEY UPDATE `reply_date`=NULL, `status`="pending", ' +
+        `offer_date=${connection.escape(offer_date)}, deadline_date=${connection.escape(deadline_date)}`
+      );
       console.log(`Succesfully offered ${offers.length} appointments`);
     } else {
       console.log('No offers matched');

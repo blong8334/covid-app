@@ -9,7 +9,7 @@ async function scheduler() {
     await connection.connect();
     const unavailOffers = await connection.query(
       queries['patientsWithStatus.txt'],
-      [['completed', 'pending']],
+      [['completed', 'pending', 'accepted']],
     );
     let { bookedPatients, bookedAppointments } = unavailOffers[0];
     if (!bookedPatients) {
